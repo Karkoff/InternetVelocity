@@ -359,3 +359,9 @@ parallelCount = Math.max(1, Math.min(8, Math.ceil(quickMbps / 10)))
 - O app roda na porta **5174** (configuração customizada do Vite)
 - Os logs do speed test usam prefixo `[SpeedTest]` para fácil filtragem
 - Console logs detalhados estão disponíveis em cada serviço para debugging
+
+---
+
+## Uso do GitHub MCP como Fonte de Evidência
+
+Durante tarefas de desenvolvimento, quando houver dúvida técnica, implementação desconhecida, comportamento de biblioteca/framework, erro externo ou necessidade de exemplos reais, utilize o **GitHub MCP** como fonte de evidência. Pesquise código, repositórios, issues e pull requests relevantes antes de assumir ou inventar uma solução. Priorize projetos maduros e compatíveis com as versões utilizadas. Não copie código mecanicamente: analise, adapte à arquitetura do projeto, considere a licença e valide a implementação com os testes disponíveis. Para tarefas simples ou já suficientemente sustentadas pelo código e conhecimento do projeto, não faça consultas desnecessárias ao GitHub.
