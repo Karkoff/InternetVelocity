@@ -34,8 +34,7 @@ function createWindow(): void {
     minWidth: 480,
     minHeight: 500,
     center: true,
-    frame: true,
-    titleBarStyle: 'default',
+    frame: false, // Sem barra de menus/native title bar
     backgroundColor: '#0a0e1a',
     show: false, // Não mostrar até estar pronto (evita flash branco)
     webPreferences: {
