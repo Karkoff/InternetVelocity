@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, shell } from 'electron'
 import path from 'path'
 
 /**
@@ -31,14 +31,18 @@ function createWindow(): void {
   })
 
   // Em dev: carrega do Vite dev server (VITE_DEV_SERVER_URL é injetado pelo vite-plugin-electron)
-  // Em prod: carrega o arquivo index.html do build
+  // Em prod: carrega o arquivo index.html do build empacotado no app.asar
   if (VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(VITE_DEV_SERVER_URL)
   } else if (IS_PROD && process.env['ELECTRON_RENDERER_URL']) {
     // Modo produção com URL customizada (para debugging remoto)
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
+    // Em produção, electron-builder empacota dist/ e dist-electron/ no mesmo app.asar
+    // __dirname = app.asar/dist-electron → ../dist/index.html = app.asar/dist/index.html
+    const indexPath = path.join(__dirname, '../dist/index.html')
+    console.log('[Electron] Loading:', indexPath)
+    mainWindow.loadFile(indexPath)
   }
 
   // DevTools habilitado apenas em desenvolvimento
@@ -49,11 +53,22 @@ function createWindow(): void {
   // Abrir links externos no navegador padrão (não dentro do app)
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('https:')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('shell').openExternal(url)
+      shell.openExternal(url)
     }
     return { action: 'deny' }
   })
+
+  // Exibir e focar a janela em primeiro plano
+  mainWindow.show()
+  mainWindow.focus()
+
+  // Em produção, garantir que a janela fique visível após carregar
+  if (IS_PROD) {
+    mainWindow.webContents.on('did-finish-load', () => {
+      mainWindow.show()
+      mainWindow.focus()
+    })
+  }
 }
 
 // Criar janela quando o app estiver pronto
