@@ -16,7 +16,7 @@ Cada arquivo `Mx.md` contém as tarefas, critérios de aceite e status de cada f
 | Arquivo | Fase | Status | Descrição |
 |---------|------|--------|-----------|
 | [`docs/M0.md`](docs/M0.md) | M0 | ✅ Concluído | Aplicação web funcional (React + Vite + Tailwind) |
-| [`docs/M1.md`](docs/M1.md) | M1 | 🔄 Em progresso | Conversão para app desktop Windows com Electron |
+| [`docs/M1.md`](docs/M1.md) | M1 | ✅ Concluído | Conversão para app desktop Windows com Electron |
 
 > **Regra:** Novos milestones são criados como `docs/M2.md`, `docs/M3.md`, etc.
 > Cada milestone deve ser concluído antes de iniciar o próximo.
@@ -28,10 +28,112 @@ Cada arquivo `Mx.md` contém as tarefas, critérios de aceite e status de cada f
 | Camada        | Tecnologia              |
 |---------------|-------------------------|
 | Framework     | React 18 + TypeScript   |
-| Build         | Vite 5                  |
+| Build         | Vite 6                  |
 | Estilização   | Tailwind CSS 3          |
 | E2E Testing   | Playwright 1.63         |
 | Desktop       | Electron 28             |
+
+---
+
+## Desktop App (Electron)
+
+### Visão Geral
+
+O projeto foi convertido de uma aplicação web para um aplicativo desktop Windows instalável usando **Electron** + **Vite**. A estratégia adotada foi `vite-plugin-electron` para integração mínima — zero mudanças no código React existente.
+
+### Arquitetura Electron
+
+```
+┌───────────────────────────────────────────────┐
+│              Internet Velocity Desktop         │
+├───────────────────────────────────────────────┤
+│                                               │
+│  ┌─────────────────────────────────────────┐  │
+│  │           Electron (Chromium)            │  │
+│  │                                         │  │
+│  │  ┌─────────────┐    ┌───────────────┐   │  │
+│  │  │ Main Process │    │ Renderer      │   │  │
+│  │  │ (node.js)    │    │ (Browser)     │   │  │
+│  │  │              │    │               │   │  │
+│  │  │ - createWin()│    │ ┌───────────┐ │   │  │
+│  │  │ - app events │    │ │ React App │ │   │  │
+│  │  │              │    │ │           │ │   │  │
+│  │  └─────────────┘    │ │ SpeedGauge │ │   │  │
+│  │                     │ │ ResultCard │ │   │  │
+│  │                     │ │ ProgressBar│ │   │  │
+│  │                     │ └───────────┘ │   │  │
+│  │                     └───────────────┘   │  │
+│  │                                         │  │
+│  │  fetch() → speed.cloudflare.com ✓       │  │
+│  └─────────────────────────────────────────┘  │
+│                                               │
+├───────────────────────────────────────────────┤
+│  Build Pipeline:                              │
+│  Vite (React) → dist/                         │
+│  Electron Builder → dist-electron/            │
+│  NSIS Installer → release/*.exe               │
+└───────────────────────────────────────────────┘
+```
+
+### Componentes Electron
+
+| Arquivo | Responsabilidade |
+|---------|-----------------|
+| `electron/main.ts` | Main process — cria janela, gerencia eventos do app, IPC handlers para controles da janela (minimizar/maximizar/fechar) |
+| `electron/preload.ts` | Preload script — expõe `electronAPI` via `contextBridge` para o renderer (IPC seguro) |
+
+### Custom Frame (Title Bar)
+
+A aplicação usa `frame: false` no BrowserWindow para remover a barra de título nativa do Windows e exibir uma **title bar customizada** implementada em React (`src/components/TitleBar.tsx`).
+
+- **Drag-to-move:** Arrastar a title bar move a janela (CSS `-webkit-app-region: drag`)
+- **Botões:** Minimizar, maximizar/restaurar, fechar — comunicam com o main via IPC
+- **Estilo:** Fundo escuro (#0f1923), botões com hover state, botão fechar fica vermelho
+
+### Build Pipeline
+
+```bash
+# Desenvolvimento
+npm run dev:electron        # Vite + Electron (hot reload)
+
+# Produção
+npm run build:electron      # tsc → vite build → electron-builder
+                              # Output: release/Internet Velocity Setup 1.0.0.exe
+```
+
+### Configuração Crítica — ESM vs CJS
+
+O `package.json` tem `"type": "module"`, o que faz Node.js tratar `.js` como ES Module. O Electron precisa de CommonJS (`__dirname`, `require()`). A solução usa um plugin customizado `forceCjs()` no `vite.config.ts` que define `lib.formats = ['cjs']` via hook `config()`, contornando o mergeConfig do Vite que concatena arrays.
+
+**Resultado:** Arquivos de saída são `.cjs` com conteúdo CommonJS válido:
+- `dist-electron/main.cjs` — main process (CommonJS)
+- `dist-electron/preload.cjs` — preload script (CommonJS, obrigatório para sandboxed preloads no Electron 28)
+
+### Scripts Disponíveis
+
+#### Web (M0 — Concluído)
+
+```bash
+npm run dev        # Inicia servidor de desenvolvimento Vite (porta 5173)
+npm run build      # Compila TypeScript + gera build estático
+npm run preview    # Preview do build estático
+```
+
+#### Desktop (M1 — Concluído)
+
+```bash
+npm run dev:electron        # Inicia Electron com Vite dev server (hot reload)
+npm run build:electron      # Build web + empacota com electron-builder → release/
+npm run preview:electron    # Preview do build desktop
+```
+
+### Regras Importantes
+
+1. **Zero mudanças no código React** — `src/` permanece intacto
+2. **Zero mudanças nos serviços** — `fetch()` funciona nativamente no Electron
+3. **Segurança:** `nodeIntegration: false`, `contextIsolation: true`
+4. **Dev mode:** Electron carrega do Vite dev server (`http://localhost`)
+5. **Prod mode:** Electron empaceta os assets estáticos de `dist/`
 
 ---
 
