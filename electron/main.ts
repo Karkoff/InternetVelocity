@@ -30,9 +30,12 @@ function createWindow(): void {
     },
   })
 
-  // Em dev: carrega do Vite dev server
+  // Em dev: carrega do Vite dev server (VITE_DEV_SERVER_URL é injetado pelo vite-plugin-electron)
   // Em prod: carrega o arquivo index.html do build
-  if (IS_PROD && process.env['ELECTRON_RENDERER_URL']) {
+  if (VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(VITE_DEV_SERVER_URL)
+  } else if (IS_PROD && process.env['ELECTRON_RENDERER_URL']) {
+    // Modo produção com URL customizada (para debugging remoto)
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))

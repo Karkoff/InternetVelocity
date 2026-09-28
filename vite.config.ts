@@ -11,6 +11,10 @@ export default defineConfig({
       {
         // Main process entry file
         entry: 'electron/main.ts',
+        onstart({ reload }) {
+          // Recarrega Electron quando o main process mudar
+          reload()
+        },
         vite: {
           build: {
             outDir: 'dist-electron',
