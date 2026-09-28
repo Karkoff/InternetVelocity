@@ -31,3 +31,6 @@ vite-log.txt
 # OS files
 .DS_Store
 Thumbs.db
+
+# Diagnostic test apps (isolated Electron tests)
+electron/test-minimal/
