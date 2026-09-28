@@ -101,11 +101,11 @@ function createWindow(): void {
     mainWindow.loadFile(indexPath)
   }
 
-  // DevTools habilitado apenas em desenvolvimento
-  if (!IS_PROD) {
-    console.log('[Electron] Opening DevTools...')
-    mainWindow.webContents.openDevTools()
-  }
+  // DevTools — descomentar se precisar debugar manualmente
+  // if (!IS_PROD) {
+  //   console.log('[Electron] Opening DevTools...')
+  //   mainWindow.webContents.openDevTools()
+  // }
 
   // Abrir links externos no navegador padrão (não dentro do app)
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
