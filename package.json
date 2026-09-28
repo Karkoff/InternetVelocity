@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "Medidor de velocidade da internet",
   "type": "module",
-  "main": "dist-electron/main.js",
+  "main": "dist-electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "dev:electron": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev:electron": "vite",
+    "dev:electron-simple": "electron .",
+    "test:minimal": "cd electron/test-minimal && npm start",
     "build:electron": "tsc && vite build && electron-builder",
-    "preview:electron": "vite build && electron --no-sandbox dist-electron/main.js"
+    "preview:electron": "vite build && electron --no-sandbox dist-electron/main.cjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

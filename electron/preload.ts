@@ -16,7 +16,3 @@ import { contextBridge } from 'electron'
 // contextBridge.exposeInMainWorld('electronAPI', {
 //   // exemplo: getVersion: () => process.env.npm_package_version,
 // })
-
-// Manter o contexto limpo — remover qualquer exposição acidental
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-delete (window as any).__preloadExposed
