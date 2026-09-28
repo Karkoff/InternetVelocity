@@ -60,7 +60,13 @@ function createWindow(): void {
 
   // Exibir e focar a janela em primeiro plano
   mainWindow.show()
-  mainWindow.focus()
+  
+  // Fallback: garantir que a janela fique em primeiro plano após carregamento
+  setTimeout(() => {
+    mainWindow.show()
+    mainWindow.focus()
+    mainWindow.setAlwaysOnTop(false)
+  }, 100)
 
   // Em produção, garantir que a janela fique visível após carregar
   if (IS_PROD) {
@@ -68,11 +74,26 @@ function createWindow(): void {
       mainWindow.show()
       mainWindow.focus()
     })
+    
+    // Se a janela não aparecer em 500ms, forçar com setAlwaysOnTop
+    setTimeout(() => {
+      if (!mainWindow.isVisible()) {
+        mainWindow.setAlwaysOnTop(true, 'screen-saver')
+        mainWindow.show()
+        mainWindow.focus()
+        setTimeout(() => {
+          mainWindow.setAlwaysOnTop(false)
+        }, 200)
+      }
+    }, 500)
   }
 }
 
 // Criar janela quando o app estiver pronto
 app.whenReady().then(() => {
+  // Focar no app antes de criar a janela (garante que Electron seja o foreground)
+  app.focus()
+
   createWindow()
 
   // macOS: recriar janela ao clicar no dock (se todas as janelas forem fechadas)
