@@ -1,19 +1,18 @@
-{
-  "appId": "com.internetvelocity.app",
-  "productName": "Internet Velocity",
-  "directories": {
-    "output": "release"
-  },
-  "files": [
-    "dist/**/*",
-    "dist-electron/**/*"
-  ],
-  "win": {
-    "target": ["nsis"],
-    "icon": "public/icon.png"
-  },
-  "nsis": {
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true
-  }
-}
+# Electron Builder Configuration
+# Alternative to the "build" field in package.json — both are valid.
+# This file takes precedence when present.
+
+appId: com.internetvelocity.app
+productName: Internet Velocity
+directories:
+  output: release
+files:
+  - dist/**/*
+  - dist-electron/**/*
+win:
+  target: nsis
+  icon: public/icon.png
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: Internet Velocity
