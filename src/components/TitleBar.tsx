@@ -5,6 +5,9 @@ interface TitleBarProps {
   version?: string
 }
 
+// Propriedade vendor-specific do Electron (não está no tipagem padrão do React)
+type ElectronStyle = React.CSSProperties & { WebkitAppRegion?: 'drag' | 'no-drag' }
+
 export default function TitleBar({ title = 'Internet Velocity', version }: TitleBarProps) {
   const [isMaximized, setIsMaximized] = useState(false)
 
@@ -14,29 +17,34 @@ export default function TitleBar({ title = 'Internet Velocity', version }: Title
 
   const toggleMaximize = async () => {
     await window.electronAPI?.maximize()
-    setIsMaximized((prev) => !prev)
+    setIsMaximized((prev: boolean) => !prev)
   }
 
+  const titleBarStyle: ElectronStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 32,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 8px 0 12px',
+    backgroundColor: '#0f1923',
+    borderBottom: '1px solid rgba(255,255,255,0.06)',
+    userSelect: 'none' as const,
+    zIndex: 1000,
+    WebkitAppRegion: 'drag',
+  }
+
+  const buttonsStyle = {
+    display: 'flex',
+    gap: 0,
+    WebkitAppRegion: 'no-drag',
+  } as React.CSSProperties & { WebkitAppRegion?: string }
+
   return (
-    <div
-      className="titlebar"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 32,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 8px 0 12px',
-        backgroundColor: '#0f1923',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        WebkitAppRegion: 'drag', // Arrastar janela nativo
-        userSelect: 'none',
-        zIndex: 1000,
-      }}
-    >
+    <div className="titlebar" style={titleBarStyle}>
       {/* Lado esquerdo — título */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -49,7 +57,7 @@ export default function TitleBar({ title = 'Internet Velocity', version }: Title
       </div>
 
       {/* Lado direito — botões de controle */}
-      <div style={{ display: 'flex', gap: 0, WebkitAppRegion: 'no-drag' }}>
+      <div style={buttonsStyle}>
         <WindowButton
           onClick={() => window.electronAPI?.minimize()}
           label="—"
