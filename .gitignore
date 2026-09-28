@@ -6,6 +6,7 @@ node_modules/
 
 # Build output (gerado automaticamente)
 dist/
+dist-electron/
 
 # Test results (artefatos de teste)
 test-results/
