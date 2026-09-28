@@ -61,9 +61,8 @@ O **Internet Velocity** é um aplicativo de desktop nativo para Windows que mede
 - **Botão "Repetir Teste"** para novos testes sem reiniciar
 
 ### 📦 Distribuição
-- **Instalador NSIS** completo com opção de escolher diretório de instalação
-- **Versão Portable** compactada em ZIP — execute sem instalar
-- Ícone personalizado e nome de atalho configurável
+- **Instalador NSIS** completo com assistente de instalação e opção de escolher diretório
+- Ícone personalizado e atalho no menu Iniciar configuráveis
 
 ---
 
@@ -73,13 +72,11 @@ O **Internet Velocity** é um aplicativo de desktop nativo para Windows que mede
 
 | Versão | Tipo | Plataforma | Tamanho | Data |
 |--------|------|------------|---------|------|
-| [1.0.0](https://github.com/Karkoff/InternetVelocity/releases/tag/v1.0.0) | Instalador (.exe) | Windows 11 | ~8 MB | Set 2026 |
-| [1.0.0](https://github.com/Karkoff/InternetVelocity/releases/tag/v1.0.0) | Portable (.zip) | Windows 11 | ~5 MB | Set 2026 |
+| [1.0.0](https://github.com/Karkoff/InternetVelocity/releases/tag/v1.0.0) | Instalador (.exe) | Windows 11 | ~72 MB | Set 2026 |
 
 ### Links Diretos
 
-- 📦 **[Internet Velocity Setup 1.0.0.exe](https://github.com/Karkoff/InternetVelocity/releases/download/v1.0.0/Internet%20Velocity%20Setup%201.0.0.exe)** — Instalador com assistente NSIS
-- 🗜️ **[Internet Velocity Portable 1.0.0.zip](https://github.com/Karkoff/InternetVelocity/releases/download/v1.0.0/Internet-Velocity-portable-1.0.0.zip)** — Execute direto, sem instalação
+- 📦 **[Internet Velocity Setup 1.0.0.exe](https://github.com/Karkoff/InternetVelocity/releases/download/v1.0.0/Internet-Velocity-Setup-1.0.0.exe)** — Instalador com assistente NSIS
 
 ---
 
@@ -115,8 +112,8 @@ npm install
 InternetVelocity/
 ├── electron/              # Configuração do processo principal (Electron)
 ├── public/                # Assets estáticos (ícones, screenshots)
-├── release/               # Builds empacotados (.exe, .zip)
-│   ├── Internet Velocity Setup 1.0.0.exe
+├── release/               # Builds empacotados (.exe)
+│   ├── Internet-Velocity-Setup-1.0.0.exe
 │   └── win-unpacked/      # Versão unpacked para debug
 ├── src/
 │   ├── components/        # Componentes React (Gauge, Cards, ProgressBar)
