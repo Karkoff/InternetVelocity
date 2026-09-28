@@ -4,6 +4,22 @@
 
 Aplicativo React + Vite para teste de velocidade de conexão à internet.
 Mede **download**, **upload** e **latência (ping)** usando os endpoints públicos da Cloudflare.
+Atualmente em conversão para app desktop via Electron.
+
+---
+
+## Roadmap / Milestones
+
+O planejamento do projeto é dividido em milestones documentados na pasta `docs/`.
+Cada arquivo `Mx.md` contém as tarefas, critérios de aceite e status de cada fase.
+
+| Arquivo | Fase | Status | Descrição |
+|---------|------|--------|-----------|
+| [`docs/M0.md`](docs/M0.md) | M0 | ✅ Concluído | Aplicação web funcional (React + Vite + Tailwind) |
+| [`docs/M1.md`](docs/M1.md) | M1 | 🔄 Em progresso | Conversão para app desktop Windows com Electron |
+
+> **Regra:** Novos milestones são criados como `docs/M2.md`, `docs/M3.md`, etc.
+> Cada milestone deve ser concluído antes de iniciar o próximo.
 
 ---
 
@@ -23,6 +39,11 @@ Mede **download**, **upload** e **latência (ping)** usando os endpoints públic
 
 ```
 InternetVelocity/
+├── docs/                          # Roadmap / Milestones (M0.md, M1.md, ...)
+│   ├── M0.md                      # ✅ Aplicação web funcional
+│   └── M1.md                      # 🔄 Conversão para desktop (Electron)
+├── electron/                      # Electron main process (M1)
+│   └── main.ts                    # Main process do Electron
 ├── src/
 │   ├── App.tsx                    # Componente principal (orquestra os testes)
 │   ├── main.tsx                   # Entry point React
@@ -39,8 +60,9 @@ InternetVelocity/
 │   └── tests/
 │       └── speedtest.spec.ts      # Testes E2E Playwright
 ├── playwright.config.ts           # Configuração do Playwright
-├── vite.config.ts                 # Configuração do Vite
+├── vite.config.ts                 # Configuração do Vite + Electron plugin
 ├── tailwind.config.js             # Configuração Tailwind
+├── electron-builder.yml           # Configuração do builder (M1)
 ├── package.json                   # Dependências e scripts
 └── index.html                     # HTML base
 ```
@@ -130,18 +152,30 @@ interface SpeedTestProgress {
 
 | Endpoint                              | Método | Finalidade                    |
 |---------------------------------------|--------|-------------------------------|
-| `/cdn-cgi/trace`                      | HEAD   | Medir latência (ping)         |
+| `/cdn-cgi/trace?t={timestamp}`        | GET    | Medir latência (ping)         |
 | `/__down?bytes={n}`                   | GET    | Download de dados             |
 | `/__up`                               | POST   | Upload de dados               |
+
+> ⚠️ **Importante:** O endpoint `/cdn-cgi/trace` **não suporta HEAD**. Deve-se usar `GET` com `response.text()` para medir RTT completo. (Bug corrigido em M0)
 
 ---
 
 ## Scripts Disponíveis
 
+### Web (M0 — Concluído)
+
 ```bash
 npm run dev        # Inicia servidor de desenvolvimento Vite (porta 5173)
 npm run build      # Compila TypeScript + gera build estático
 npm run preview    # Preview do build estático
+```
+
+### Desktop (M1 — Em progresso)
+
+```bash
+npm run dev:electron   # Inicia Electron com Vite dev server (hot reload)
+npm run build:electron # Build web + empacota com electron-builder → release/
+npm run preview:electron # Preview do build desktop
 ```
 
 ---
