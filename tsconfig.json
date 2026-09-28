@@ -22,9 +22,9 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
-    "baseUrl": ".",
+    /* Path aliases — baseUrl deprecated no TS 7.0, removido para evitar warning */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
