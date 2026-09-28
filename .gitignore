@@ -8,6 +8,9 @@ node_modules/
 dist/
 dist-electron/
 
+# Release builds (installer .exe, portable, asar)
+release/
+
 # Test results (artefatos de teste)
 test-results/
 
@@ -19,3 +22,12 @@ test-results/
 # Logs do projeto
 *.log
 vite-log.txt
+
+# IDE / Editor
+.opencode/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
