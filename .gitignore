@@ -1,30 +1,20 @@
-# Dependencies
+# Dependencies (não versionar dependências instaladas)
 node_modules/
-/package-lock.json
 
-# Build output
+# Lock file (opcional — descomente se preferir não versionar)
+# package-lock.json
+
+# Build output (gerado automaticamente)
 dist/
-build/
 
-# Test results
+# Test results (artefatos de teste)
 test-results/
 
-# Environment
+# Arquivos sensíveis
 .env
 .env.local
 .env.*.local
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+# Logs do projeto
 *.log
 vite-log.txt
