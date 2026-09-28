@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import SpeedGauge from './components/SpeedGauge'
 import ResultCard from './components/ResultCard'
 import ProgressBar from './components/ProgressBar'
+import TitleBar from './components/TitleBar'
 import { runLatencyTest } from './services/latencyService'
 import { runDownloadTest } from './services/downloadService'
 import { runUploadTest } from './services/uploadService'
@@ -84,19 +85,11 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#0a0e1a] text-white">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-[#111827]">
-        <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <span className="text-sm font-medium text-gray-300">Internet Velocity</span>
-        </div>
-        <span className="text-xs text-gray-600">v1.0</span>
-      </header>
+      {/* Title Bar customizada (Electron frame: false) */}
+      <TitleBar version="1.0" />
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 overflow-y-auto">
+      {/* Main Content — padding-top compensa a title bar de 32px */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 overflow-y-auto pt-4">
         {/* Gauge Section */}
         <div className={`mb-8 ${isRunning ? 'gauge-active' : ''}`}>
           <SpeedGauge 

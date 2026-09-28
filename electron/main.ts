@@ -9,6 +9,25 @@ import path from 'path'
  * Em prod: carrega do build estático (dist/index.html)
  */
 
+// ===== IPC Handlers — Controles da janela custom frame =====
+function setupIpcHandlers(win: BrowserWindow): void {
+  const ipc = require('electron').ipcMain
+
+  ipc.on('window-minimize', () => win.minimize())
+  
+  ipc.on('window-maximize', () => {
+    if (win.isMaximized()) {
+      win.unmaximize()
+    } else {
+      win.maximize()
+    }
+  })
+  
+  ipc.on('window-close', () => win.close())
+
+  ipc.handle('window-is-maximized', () => win.isMaximized())
+}
+
 // ===== LOGS DE DIAGNÓSTICO =====
 console.log('[Electron] ========================================')
 console.log('[Electron] App starting...')
@@ -45,6 +64,9 @@ function createWindow(): void {
   })
 
   console.log('[Electron] BrowserWindow instance created')
+
+  // Configurar handlers IPC para controles da janela custom frame
+  setupIpcHandlers(mainWindow)
 
   // ===== Event listeners para diagnóstico =====
   mainWindow.webContents.on('did-finish-load', () => {
